@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.MVC", "Library.MVC\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.domain", "ClassLibrary1\Library.domain.csproj", "{BEB586F8-5CBF-48EB-B0CB-C1D129837380}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{EF87B3BB-30CF-4D37-B948-CA5725F61CBF}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "Api\Api.csproj", "{CDA279DC-FCF0-46D4-A103-45FF7F2BFD53}"
 EndProject
 Global
@@ -25,10 +23,6 @@ Global
 		{BEB586F8-5CBF-48EB-B0CB-C1D129837380}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BEB586F8-5CBF-48EB-B0CB-C1D129837380}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BEB586F8-5CBF-48EB-B0CB-C1D129837380}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EF87B3BB-30CF-4D37-B948-CA5725F61CBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF87B3BB-30CF-4D37-B948-CA5725F61CBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF87B3BB-30CF-4D37-B948-CA5725F61CBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF87B3BB-30CF-4D37-B948-CA5725F61CBF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CDA279DC-FCF0-46D4-A103-45FF7F2BFD53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CDA279DC-FCF0-46D4-A103-45FF7F2BFD53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDA279DC-FCF0-46D4-A103-45FF7F2BFD53}.Release|Any CPU.ActiveCfg = Release|Any CPU

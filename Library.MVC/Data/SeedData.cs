@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Library.domain.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Library.MVC.Data
 {
@@ -9,11 +11,8 @@ namespace Library.MVC.Data
         public static void Initialize(ApplicationDbContext context)
         {
             if (context.Books.Any() || context.Members.Any() || context.Loans.Any())
-                return; // Já tem dados
+                return;
 
-            // ----------------------
-            // BOOKS (20)
-            // ----------------------
             var books = new[]
             {
                 new Book { Title = "C# Basics", Author = "John Smith", Isbn = "111", Category = "Programming", IsAvailable = true },
@@ -41,9 +40,6 @@ namespace Library.MVC.Data
             context.Books.AddRange(books);
             context.SaveChanges();
 
-            // ----------------------
-            // MEMBERS (10)
-            // ----------------------
             var members = new[]
             {
                 new Member { FullName = "Alice Johnson", Email = "alice@email.com", Phone = "1111" },
@@ -61,29 +57,18 @@ namespace Library.MVC.Data
             context.Members.AddRange(members);
             context.SaveChanges();
 
-            // ----------------------
-            // LOANS (15)
-            // ----------------------
             var loans = new[]
             {
-                // Ativos
                 new Loan { BookId = books[0].Id, MemberId = members[0].Id, LoanDate = DateTime.Now.AddDays(-2), DueDate = DateTime.Now.AddDays(5), ReturnedDate = null },
                 new Loan { BookId = books[1].Id, MemberId = members[1].Id, LoanDate = DateTime.Now.AddDays(-3), DueDate = DateTime.Now.AddDays(4), ReturnedDate = null },
-
-                // Atrasados
                 new Loan { BookId = books[2].Id, MemberId = members[2].Id, LoanDate = DateTime.Now.AddDays(-10), DueDate = DateTime.Now.AddDays(-2), ReturnedDate = null },
                 new Loan { BookId = books[3].Id, MemberId = members[3].Id, LoanDate = DateTime.Now.AddDays(-8), DueDate = DateTime.Now.AddDays(-1), ReturnedDate = null },
-
-                // Devolvidos
                 new Loan { BookId = books[4].Id, MemberId = members[4].Id, LoanDate = DateTime.Now.AddDays(-10), DueDate = DateTime.Now.AddDays(-5), ReturnedDate = DateTime.Now.AddDays(-3) },
                 new Loan { BookId = books[5].Id, MemberId = members[5].Id, LoanDate = DateTime.Now.AddDays(-6), DueDate = DateTime.Now.AddDays(-2), ReturnedDate = DateTime.Now.AddDays(-1) },
-
-                // Mistos
                 new Loan { BookId = books[6].Id, MemberId = members[6].Id, LoanDate = DateTime.Now.AddDays(-4), DueDate = DateTime.Now.AddDays(2), ReturnedDate = null },
                 new Loan { BookId = books[7].Id, MemberId = members[7].Id, LoanDate = DateTime.Now.AddDays(-7), DueDate = DateTime.Now.AddDays(-1), ReturnedDate = null },
                 new Loan { BookId = books[8].Id, MemberId = members[8].Id, LoanDate = DateTime.Now.AddDays(-5), DueDate = DateTime.Now.AddDays(1), ReturnedDate = null },
                 new Loan { BookId = books[9].Id, MemberId = members[9].Id, LoanDate = DateTime.Now.AddDays(-9), DueDate = DateTime.Now.AddDays(-3), ReturnedDate = DateTime.Now.AddDays(-2) },
-
                 new Loan { BookId = books[10].Id, MemberId = members[0].Id, LoanDate = DateTime.Now.AddDays(-2), DueDate = DateTime.Now.AddDays(3), ReturnedDate = null },
                 new Loan { BookId = books[11].Id, MemberId = members[1].Id, LoanDate = DateTime.Now.AddDays(-1), DueDate = DateTime.Now.AddDays(6), ReturnedDate = null },
                 new Loan { BookId = books[12].Id, MemberId = members[2].Id, LoanDate = DateTime.Now.AddDays(-6), DueDate = DateTime.Now.AddDays(-2), ReturnedDate = null },
@@ -93,7 +78,6 @@ namespace Library.MVC.Data
 
             context.Loans.AddRange(loans);
 
-            // Atualiza disponibilidade
             foreach (var loan in loans)
             {
                 if (loan.ReturnedDate == null)
@@ -105,6 +89,46 @@ namespace Library.MVC.Data
             }
 
             context.SaveChanges();
+        }
+
+        public static async Task SeedAdminUserAndRolesAsync(
+            UserManager<IdentityUser> userManager,
+            RoleManager<IdentityRole> roleManager)
+        {
+            string adminRole = "Admin";
+            string adminEmail = "admin@library.com";
+            string adminPassword = "Admin123!";
+
+            if (!await roleManager.RoleExistsAsync(adminRole))
+            {
+                await roleManager.CreateAsync(new IdentityRole(adminRole));
+            }
+
+            var adminUser = await userManager.FindByEmailAsync(adminEmail);
+
+            if (adminUser == null)
+            {
+                adminUser = new IdentityUser
+                {
+                    UserName = adminEmail,
+                    Email = adminEmail,
+                    EmailConfirmed = true
+                };
+
+                var result = await userManager.CreateAsync(adminUser, adminPassword);
+
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(adminUser, adminRole);
+                }
+            }
+            else
+            {
+                if (!await userManager.IsInRoleAsync(adminUser, adminRole))
+                {
+                    await userManager.AddToRoleAsync(adminUser, adminRole);
+                }
+            }
         }
     }
 }
